@@ -1,0 +1,37 @@
+{
+    "name": "@ohos/kanto",
+    "description": "kanto",
+    "version": "1.0",
+    "license": "Apache V2",
+    "publishAs": "code-segment",
+    "segment": {
+        "destPath": "third_party/kanto"
+    },
+    "dirs": {},
+    "scripts": {},
+    "licensePath": "LICENSE",
+    "readmePath": {
+        "en": "README.md"
+    },
+    "component": {
+        "name": "kanto",
+        "subsystem": "thirdparty",
+        "syscap": [],
+        "features": [],
+        "adapted_system_type": [],
+        "rom": "",
+        "ram": "",
+        "deps": {
+            "components": [],
+            "third_party": []
+        },
+        "build": {
+            "sub_component": [
+                "//third_party/kanto:suite-connector",
+                "//third_party/kanto:iothub-crt"
+            ],
+            "inner_kits": [],
+            "test": []
+        }
+    }
+}
