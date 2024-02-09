@@ -1,13 +1,33 @@
+import("//build/ohos.gni")
 
-action("suite-connector") {
+action("build-suite-connector") {
     script = "BUILD.py"
-    outputs = ["$target_out_dir/suite-connector"]
     outputPath = rebase_path("$target_out_dir")
     inputPath = rebase_path("./suite-connector/cmd/connector")
-    args = ["--target-os=linux", "--target-arch=$target_cpu", "--output=$outputPath", "--input=$inputPath", "--result=suite-connector"]
+    resultName = "suite-connector"
+    args = ["--target-os=linux", "--target-arch=$target_cpu", "--output=$outputPath", "--input=$inputPath", "--result=$resultName"]
+    outputs = ["$target_out_dir/${resultName}"]
 }
 
-copy("iothub-crt") {
+copy("copy-iothub-crt") {
     sources = ["./suite-connector/cmd/connector/iothub.crt"]
     outputs = ["$target_out_dir/iothub.crt"]
 }
+
+ohos_prebuilt_executable("suite-connector") {
+    install_enable = true
+    deps = ["//third_party/kanto:build-suite-connector"]
+    part_name = "kanto"
+    subsystem_name = "thirdparty"
+    source = "$target_out_dir/suite-connector"
+}
+
+ohos_prebuilt_etc("iothub-crt") {
+    install_enable = true
+    deps = ["//third_party/kanto:copy-iothub-crt"]
+    part_name = "kanto"
+    subsystem_name = "thirdparty"
+    source = "$target_out_dir/iothub.crt"
+    relative_install_dir = "suite-connector"
+}
+
