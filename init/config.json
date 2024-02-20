@@ -1,0 +1,5 @@
+{
+    "caCert": "/etc/suite-connector/iothub.crt",
+    "provisioningFile": "/etc/suite-connector/provisioning.json",
+    "logFile": "/data/log/suite-connector.log"
+}

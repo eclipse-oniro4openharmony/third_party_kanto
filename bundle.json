@@ -28,7 +28,8 @@
         "build": {
             "sub_component": [
                 "//third_party/kanto:suite-connector",
-                "//third_party/kanto:iothub-crt"
+                "//third_party/kanto:iothub-crt",
+                "//third_party/kanto:kanto_init"
             ],
             "inner_kits": [],
             "test": []

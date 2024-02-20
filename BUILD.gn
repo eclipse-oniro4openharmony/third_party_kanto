@@ -31,3 +31,18 @@ ohos_prebuilt_etc("iothub-crt") {
     relative_install_dir = "suite-connector"
 }
 
+ohos_prebuilt_etc("config.json") {
+    install_enable = true
+    part_name = "kanto"
+    subsystem_name = "thirdparty"
+    source = "init/config.json"
+    relative_install_dir = "suite-connector"
+}
+
+ohos_prebuilt_etc("kanto_init") {
+  source = "init/kanto.cfg"
+  deps = [":config.json"]
+  relative_install_dir = "init"
+  part_name = "kanto"
+  subsystem_name = "thirdparty"
+}
