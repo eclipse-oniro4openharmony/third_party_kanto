@@ -39,9 +39,16 @@ ohos_prebuilt_etc("config.json") {
     relative_install_dir = "suite-connector"
 }
 
+ohos_prebuilt_etc("etc_hosts") {
+    install_enable = true
+    part_name = "kanto"
+    subsystem_name = "thirdparty"
+    source = "init/hosts"
+}
+
 ohos_prebuilt_etc("kanto_init") {
   source = "init/kanto.cfg"
-  deps = [":config.json"]
+  deps = [":config.json", ":etc_hosts"]
   relative_install_dir = "init"
   part_name = "kanto"
   subsystem_name = "thirdparty"
