@@ -1,0 +1,12 @@
+{
+    "process": "kanto_service",
+    "systemability": [
+        {
+            "name": 8100,
+            "libpath": "libkanto_system_ability.z.so",
+            "run-on-create": true,
+            "distributed": false,
+            "dump_level": 1
+        }
+    ]
+}

@@ -23,10 +23,12 @@ REGISTER_SYSTEM_ABILITY_BY_ID(KantoService, KANTO_SERVICE_SA_ID, true);
 
 KantoService::KantoService(int32_t saId, bool runOnCreate) : SystemAbility(saId, runOnCreate)
 {
+    KANTO_HILOGI(KANTO_MODULE_SERVICE, "KantoService Start");
 }
 
 void KantoService::OnStart()
 {
+    KANTO_HILOGI(KANTO_MODULE_SERVICE, "Kanto Service on_start");
     SystemAbility::OnStart(); // Initialize the system ability
     StartServices(); // Start the required services
 }
