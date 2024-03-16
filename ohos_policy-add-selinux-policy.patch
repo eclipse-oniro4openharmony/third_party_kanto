@@ -1,0 +1,249 @@
+From 521c6a63387b24a3d79184f49e112ea58cb94939 Mon Sep 17 00:00:00 2001
+From: Francesco Pham <francesco.pham@huawei.com>
+Date: Mon, 4 Mar 2024 14:12:04 +0100
+Subject: [PATCH] ohos_policy: Add selinux policy for kanto and mosquitto
+ services
+
+some selinux policy are needed for kanto and mosquitto services to properly run.
+
+Related issue: https://gitlab.eclipse.org/eclipse/oniro-core/ohos-planning/-/issues/41
+Related issue: https://gitlab.eclipse.org/eclipse/oniro-core/ohos-planning/-/issues/47
+---
+ sepolicy/ohos_policy/kanto/public/kanto.te    | 21 +++++++++++
+ .../ohos_policy/kanto/system/file_contexts    | 17 +++++++++
+ sepolicy/ohos_policy/kanto/system/init.te     | 16 +++++++++
+ sepolicy/ohos_policy/kanto/system/kanto.te    | 25 +++++++++++++
+ .../ohos_policy/mosquitto/public/mosquitto.te | 21 +++++++++++
+ .../mosquitto/system/file_contexts            | 17 +++++++++
+ sepolicy/ohos_policy/mosquitto/system/init.te | 16 +++++++++
+ .../ohos_policy/mosquitto/system/mosquitto.te | 36 +++++++++++++++++++
+ 8 files changed, 169 insertions(+)
+ create mode 100644 sepolicy/ohos_policy/kanto/public/kanto.te
+ create mode 100644 sepolicy/ohos_policy/kanto/system/file_contexts
+ create mode 100644 sepolicy/ohos_policy/kanto/system/init.te
+ create mode 100644 sepolicy/ohos_policy/kanto/system/kanto.te
+ create mode 100644 sepolicy/ohos_policy/mosquitto/public/mosquitto.te
+ create mode 100644 sepolicy/ohos_policy/mosquitto/system/file_contexts
+ create mode 100644 sepolicy/ohos_policy/mosquitto/system/init.te
+ create mode 100644 sepolicy/ohos_policy/mosquitto/system/mosquitto.te
+
+diff --git a/sepolicy/ohos_policy/kanto/public/kanto.te b/sepolicy/ohos_policy/kanto/public/kanto.te
+new file mode 100644
+index 00000000..25944902
+--- /dev/null
++++ b/sepolicy/ohos_policy/kanto/public/kanto.te
+@@ -0,0 +1,21 @@
++# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++##################
++## Type define: ##
++##################
++type kanto, sadomain, domain;
++
++type kanto_exec, exec_attr, file_attr, system_file_attr;
++type data_kanto_file, file_attr, data_file_attr;
++init_daemon_domain(kanto);
+diff --git a/sepolicy/ohos_policy/kanto/system/file_contexts b/sepolicy/ohos_policy/kanto/system/file_contexts
+new file mode 100644
+index 00000000..e58a652b
+--- /dev/null
++++ b/sepolicy/ohos_policy/kanto/system/file_contexts
+@@ -0,0 +1,17 @@
++# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++/system/bin/suite-connector              u:object_r:kanto_exec:s0
++
++/data/log/kanto(/.*)?           u:object_r:data_kanto_file:s0
++
+diff --git a/sepolicy/ohos_policy/kanto/system/init.te b/sepolicy/ohos_policy/kanto/system/init.te
+new file mode 100644
+index 00000000..7bb06a8e
+--- /dev/null
++++ b/sepolicy/ohos_policy/kanto/system/init.te
+@@ -0,0 +1,16 @@
++# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++allow init kanto:file { getattr open read relabelto setattr };
++allow init kanto:dir { getattr open read relabelto setattr search };
++allow init kanto:process { getattr rlimitinh siginh transition };
+diff --git a/sepolicy/ohos_policy/kanto/system/kanto.te b/sepolicy/ohos_policy/kanto/system/kanto.te
+new file mode 100644
+index 00000000..5a247eda
+--- /dev/null
++++ b/sepolicy/ohos_policy/kanto/system/kanto.te
+@@ -0,0 +1,25 @@
++# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++allow kanto dev_console_file:chr_file  { read write };
++allow kanto debug_param:file { map open read };
++allow kanto kanto:tcp_socket { create setopt bind listen connect getopt getattr write read };
++allow kanto port:tcp_socket { name_bind name_connect };
++allow kanto node:tcp_socket { node_bind };
++allow kanto kanto:udp_socket { create setopt connect getattr write read };
++allow kanto hilog_param:file { map open read };
++allow kanto dev_unix_socket:dir { search };
++allow kanto data_file:dir { search };
++allow kanto data_log:file { read write create append open ioctl getattr };
++allow kanto data_log:dir { write add_name };
++allow kanto system_etc_file:dir { watch };
+diff --git a/sepolicy/ohos_policy/mosquitto/public/mosquitto.te b/sepolicy/ohos_policy/mosquitto/public/mosquitto.te
+new file mode 100644
+index 00000000..23484355
+--- /dev/null
++++ b/sepolicy/ohos_policy/mosquitto/public/mosquitto.te
+@@ -0,0 +1,21 @@
++# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++##################
++## Type define: ##
++##################
++type mosquitto, sadomain, domain;
++
++type mosquitto_exec, exec_attr, file_attr, system_file_attr;
++type data_mosquitto_file, file_attr, data_file_attr;
++init_daemon_domain(mosquitto);
+diff --git a/sepolicy/ohos_policy/mosquitto/system/file_contexts b/sepolicy/ohos_policy/mosquitto/system/file_contexts
+new file mode 100644
+index 00000000..a84ec086
+--- /dev/null
++++ b/sepolicy/ohos_policy/mosquitto/system/file_contexts
+@@ -0,0 +1,17 @@
++# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++/system/bin/mosquitto              u:object_r:mosquitto_exec:s0
++
++/data/log/mosquitto(/.*)?           u:object_r:data_mosquitto_file:s0
++
+diff --git a/sepolicy/ohos_policy/mosquitto/system/init.te b/sepolicy/ohos_policy/mosquitto/system/init.te
+new file mode 100644
+index 00000000..e6940ad8
+--- /dev/null
++++ b/sepolicy/ohos_policy/mosquitto/system/init.te
+@@ -0,0 +1,16 @@
++# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++allow init mosquitto:file { getattr open read relabelto setattr };
++allow init mosquitto:dir { getattr open read relabelto setattr search };
++allow init mosquitto:process { getattr rlimitinh siginh transition };
+diff --git a/sepolicy/ohos_policy/mosquitto/system/mosquitto.te b/sepolicy/ohos_policy/mosquitto/system/mosquitto.te
+new file mode 100644
+index 00000000..9dd84f49
+--- /dev/null
++++ b/sepolicy/ohos_policy/mosquitto/system/mosquitto.te
+@@ -0,0 +1,36 @@
++# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++# avc:  denied  { read write } for  pid=1690 comm="mosquitto" path="/dev/console" dev="tmpfs" ino=40 scontext=u:r:mosquitto:s0 tcontext=u:object_r:dev_console_file:s0 tclass=chr_file permissive=0
++allow mosquitto dev_console_file:chr_file  { read write };
++
++# avc:  denied  { read } for  pid=1690 comm="mosquitto" name="u:object_r:debug_param:s0" dev="tmpfs" ino=73 scontext=u:r:mosquitto:s0 tcontext=u:object_r:debug_param:s0 tclass=file permissive=0
++allow mosquitto debug_param:file { map open read };
++
++# avc:  denied  { create } for  pid=1648 comm="mosquitto" scontext=u:r:mosquitto:s0 tcontext=u:r:mosquitto:s0 tclass=tcp_socket permissive=0
++allow mosquitto mosquitto:tcp_socket { create setopt bind listen accept getattr read write };
++allow mosquitto port:tcp_socket { name_bind };
++allow mosquitto node:tcp_socket { node_bind };
++
++# avc:  denied  { read } for  pid=1648 comm="mosquitto" name="u:object_r:hilog_param:s0" dev="tmpfs" ino=69 scontext=u:r:mosquitto:s0 tcontext=u:object_r:hilog_param:s0 tclass=file permissive=0
++allow mosquitto hilog_param:file { map open read };
++
++# avc:  denied  { search } for  pid=1648 comm="mosquitto" name="socket" dev="tmpfs" ino=43 scontext=u:r:mosquitto:s0 tcontext=u:object_r:dev_unix_socket:s0 tclass=dir permissive=0
++allow mosquitto dev_unix_socket:dir { search };
++
++# avc:  denied  { search } for  pid=1621 comm="mosquitto" name="/" dev="mmcblk0p14" ino=3 scontext=u:r:mosquitto:s0 tcontext=u:object_r:data_file:s0 tclass=dir permissive=0
++allow mosquitto data_file:dir { search };
++
++# avc:  denied  { write } for  pid=1714 comm="mosquitto" name="mosquitto" dev="mmcblk0p14" ino=23 scontext=u:r:mosquitto:s0 tcontext=u:object_r:data_log:s0 tclass=dir permissive=0
++allow mosquitto data_log:file { read write create append open ioctl getattr };
++allow mosquitto data_log:dir { write add_name };
+-- 
+2.25.1
+
