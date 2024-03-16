@@ -10,8 +10,8 @@ Before proceeding, ensure you have obtained the Oniro-OpenHarmony source code as
 Clone the Kanto and Mosquitto repositories into the `//third_party` directory to incorporate them into the Oniro-OpenHarmony system:
 
 ```console
-$ git clone --recurse-submodules  https://github.com/frankplus/third_party_kanto.git ./third_party/kanto
-$ git clone --recurse-submodules  https://github.com/frankplus/third_party_mosquitto.git ./third_party/mosquitto
+$ git clone --recurse-submodules  https://github.com/eclipse-oniro4openharmony/third_party_kanto.git ./third_party/kanto
+$ git clone --recurse-submodules  https://github.com/eclipse-oniro4openharmony/third_party_mosquitto.git ./third_party/mosquitto
 ```
 
 ### Modifying Configuration Files
@@ -41,23 +41,34 @@ index 255af7f..e8ff335 100644
 ```
 
 ### Adjusting Security Settings
-Currently, Oniro-OpenHarmony does not natively support third-party services such as Kanto and Mosquitto. As a temporary measure, disable certain security features by modifying the `//vendor/hihope/rk3568/config.json` file.
 
-```diff
-diff --git a/rk3568/config.json b/rk3568/config.json
-index ea2d588..b6a8dc0 100755
---- a/rk3568/config.json
-+++ b/rk3568/config.json
-@@ -9,7 +9,7 @@
-   "api_version": 8,
-   "enable_ramdisk": true,
-   "enable_absystem": false,
--  "build_selinux": true,
-+  "build_selinux": false,
-   "build_seccomp": true,
-   "inherit": [ "productdefine/common/inherit/rich.json", "productdefine/common/inherit/chipset_common.json" ],
-   "subsystems": [
-```
+To run Kanto and Mosquitto services properly in Oniro-OpenHarmony, you need to adjust the security settings. There are two ways to do this:
+
+1. **Apply a SELinux Policy Patch:** This is the recommended method to ensure services run smoothly. Apply the `ohos_policy-add-selinux-policy.patch` to the `base/security/selinux_adapter` directory using the following command:
+
+    ```console
+    git apply --directory=base/security/selinux_adapter ohos_policy-add-selinux-policy.patch
+    ```
+
+2. **Disable SELinux:** As a quicker, but less secure option, you can disable SELinux. This method is only suggested for testing or development environments. To disable, change the `build_selinux` setting from `true` to `false` in the `//vendor/hihope/rk3568/config.json` file:
+
+    ```diff
+    diff --git a/rk3568/config.json b/rk3568/config.json
+    index ea2d588..b6a8dc0 100755
+    --- a/rk3568/config.json
+    +++ b/rk3568/config.json
+    @@ -9,7 +9,7 @@
+      "api_version": 8,
+      "enable_ramdisk": true,
+      "enable_absystem": false,
+    -  "build_selinux": true,
+    +  "build_selinux": false,
+      "build_seccomp": true,
+      "inherit": [ "productdefine/common/inherit/rich.json", "productdefine/common/inherit/chipset_common.json" ],
+      "subsystems": [
+    ```
+
+Choose the method that best fits your security needs and development stage. Applying the patch is safer but disabling SELinux can be a quick way to test functionality.
 
 ### Configuring Kanto for Backend Connection
 Adjust the Kanto configuration by editing the file at `//third_party/kanto/init/config.json`. This setup is crucial for linking your device with a Kanto backend. For instance, if you're utilizing the Eclipse Hono sandbox, your `config.json` could be structured as follows:
