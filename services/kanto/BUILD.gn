@@ -21,11 +21,13 @@ ohos_shared_library("kanto_system_ability") {
   ]
 
   include_dirs = [
-    "include"
+    "include",
+    "../../paho-mqtt/paho.mqtt.cpp/src",
+    "../../paho-mqtt/paho.mqtt.cpp/src/externals/paho-mqtt-c/src",
   ]
 
   deps = [
-
+    "../../paho-mqtt:libpaho_mqtt_cpp"
   ]
   external_deps = [
     "hilog:libhilog",
