@@ -17,6 +17,8 @@
 #include "system_ability_definition.h"
 #include <unistd.h>
 #include <system_error>
+#include "mqtt/client.h"
+#include "json.hpp"
 
 namespace OHOS {
 REGISTER_SYSTEM_ABILITY_BY_ID(KantoService, KANTO_SERVICE_SA_ID, true);
@@ -40,7 +42,77 @@ void KantoService::OnStop()
 
 int32_t KantoService::StartServices()
 {
-    KANTO_HILOGI(KANTO_MODULE_SERVICE, "starting kanto!");
+    KANTO_HILOGI(KANTO_MODULE_SERVICE, "Starting Kanto Service");
+
+    std::string ip = "127.0.0.1:1883";
+    std::string id = "temperature_sensor";
+    mqtt::client client(ip, id);
+
+    try {
+        KANTO_HILOGD(KANTO_MODULE_SERVICE, "Connecting to MQTT broker");
+        client.connect();
+
+        KANTO_HILOGD(KANTO_MODULE_SERVICE, "Subscribing to edge/thing/response");
+        client.subscribe("edge/thing/response");
+
+        KANTO_HILOGD(KANTO_MODULE_SERVICE, "Requesting device data");
+        mqtt::message_ptr deviceDataRequestMessagePointer = mqtt::make_message("edge/thing/request", "");
+        client.publish(deviceDataRequestMessagePointer);
+
+        auto deviceDataResponseMessagePointer = client.consume_message();
+
+        if (!deviceDataResponseMessagePointer) 
+        {
+            KANTO_HILOGI(KANTO_MODULE_SERVICE, "No device data available");
+            return 1;
+        }
+
+        KANTO_HILOGD(KANTO_MODULE_SERVICE, "Unsubscribing from edge/thing/response");
+        client.unsubscribe("edge/thing/response");
+        
+        KANTO_HILOGI(KANTO_MODULE_SERVICE, "Device data received %s", deviceDataResponseMessagePointer->get_payload_str().c_str());
+
+        nlohmann::json deviceData = nlohmann::json::parse(deviceDataResponseMessagePointer->get_payload_str());
+        std::string tenantId = deviceData["tenantId"];
+        std::string gatewayDeviceId = deviceData["deviceId"];
+        std::string airConditionerDeviceId = gatewayDeviceId + ":AC";
+        std::string deviceIdInNamespaceNotation = airConditionerDeviceId;
+        int namespaceSeparatorIndex = deviceIdInNamespaceNotation.find(":");
+        deviceIdInNamespaceNotation.replace(namespaceSeparatorIndex, 1, "/");
+        std::string telemetryTopic = "t/" + tenantId + "/" + airConditionerDeviceId;
+
+        nlohmann::json telemetryMessagePayload = {
+            {"topic", deviceIdInNamespaceNotation + "/things/twin/commands/modify"},
+            {"headers", {
+                {"content-type", "application/json"},
+                {"response-required", false}
+            }},
+            {"path", "/features/temperature"},
+            {"value", {{
+                "properties", {{
+                    "currentTemperature", 0
+                }}
+            }}}
+        };
+
+        KANTO_HILOGI(KANTO_MODULE_SERVICE, "Payload Template: %s", telemetryMessagePayload.dump().c_str());
+
+        // Simulate user response "send" once for demonstration
+        srand(time(nullptr));
+        int currentTemperature = 20 + (rand() % 10);
+        telemetryMessagePayload["value"]["properties"]["currentTemperature"] = currentTemperature;
+
+        KANTO_HILOGI(KANTO_MODULE_SERVICE, "Sending message:: topic: %s, message: %s", telemetryTopic.c_str(), telemetryMessagePayload.dump().c_str());
+        mqtt::message_ptr telemetryMessage = mqtt::make_message(telemetryTopic, telemetryMessagePayload.dump());
+        client.publish(telemetryMessage);
+
+        KANTO_HILOGI(KANTO_MODULE_SERVICE, "Service initialization and MQTT client setup completed.");
+
+    } catch (const mqtt::exception& e) {
+        KANTO_HILOGE(KANTO_MODULE_SERVICE, "MQTT Exception: %s", e.what());
+        return 1;
+    }
+
     return 0;
 }
 
