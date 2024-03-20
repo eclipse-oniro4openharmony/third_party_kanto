@@ -22,14 +22,24 @@
         "rom": "",
         "ram": "",
         "deps": {
-            "components": [],
-            "third_party": []
+            "components": [
+                "c_utils",
+                "hilog",
+                "ipc",
+                "safwk",
+                "samgr",
+                "access_token",
+                "ability_base",
+                "ability_runtime"
+            ],
+            "third_party": ["mosquitto"]
         },
         "build": {
             "sub_component": [
                 "//third_party/kanto:suite-connector",
                 "//third_party/kanto:iothub-crt",
-                "//third_party/kanto:kanto_init"
+                "//third_party/kanto:kanto_init",
+                "//third_party/kanto/services/kanto:kanto_system_ability"
             ],
             "inner_kits": [],
             "test": []
