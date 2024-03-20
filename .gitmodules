@@ -1,3 +1,6 @@
 [submodule "suite-connector"]
 	path = suite-connector
 	url = https://github.com/eclipse-kanto/suite-connector.git
+[submodule "paho-mqtt/paho.mqtt.cpp"]
+	path = paho-mqtt/paho.mqtt.cpp
+	url = https://github.com/eclipse/paho.mqtt.cpp.git
