@@ -8,6 +8,8 @@ some selinux policy are needed for kanto and mosquitto services to properly run.
 
 Related issue: https://gitlab.eclipse.org/eclipse/oniro-core/ohos-planning/-/issues/41
 Related issue: https://gitlab.eclipse.org/eclipse/oniro-core/ohos-planning/-/issues/47
+
+Signed-off-by: Francesco Pham <francesco.pham@huawei.com>
 ---
  sepolicy/ohos_policy/kanto/public/kanto.te    | 21 +++++++++++
  .../ohos_policy/kanto/system/file_contexts    | 17 +++++++++
@@ -33,7 +35,7 @@ index 00000000..25944902
 --- /dev/null
 +++ b/sepolicy/ohos_policy/kanto/public/kanto.te
 @@ -0,0 +1,21 @@
-+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -60,7 +62,7 @@ index 00000000..e58a652b
 --- /dev/null
 +++ b/sepolicy/ohos_policy/kanto/system/file_contexts
 @@ -0,0 +1,17 @@
-+# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -83,7 +85,7 @@ index 00000000..7bb06a8e
 --- /dev/null
 +++ b/sepolicy/ohos_policy/kanto/system/init.te
 @@ -0,0 +1,16 @@
-+# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -105,7 +107,7 @@ index 00000000..5a247eda
 --- /dev/null
 +++ b/sepolicy/ohos_policy/kanto/system/kanto.te
 @@ -0,0 +1,25 @@
-+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -136,7 +138,7 @@ index 00000000..23484355
 --- /dev/null
 +++ b/sepolicy/ohos_policy/mosquitto/public/mosquitto.te
 @@ -0,0 +1,21 @@
-+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -163,7 +165,7 @@ index 00000000..a84ec086
 --- /dev/null
 +++ b/sepolicy/ohos_policy/mosquitto/system/file_contexts
 @@ -0,0 +1,17 @@
-+# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -186,7 +188,7 @@ index 00000000..e6940ad8
 --- /dev/null
 +++ b/sepolicy/ohos_policy/mosquitto/system/init.te
 @@ -0,0 +1,16 @@
-+# Copyright (c) 2022 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
@@ -208,7 +210,7 @@ index 00000000..9dd84f49
 --- /dev/null
 +++ b/sepolicy/ohos_policy/mosquitto/system/mosquitto.te
 @@ -0,0 +1,36 @@
-+# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
++# Copyright (c) 2024 Huawei Device Co., Ltd.
 +# Licensed under the Apache License, Version 2.0 (the "License");
 +# you may not use this file except in compliance with the License.
 +# You may obtain a copy of the License at
