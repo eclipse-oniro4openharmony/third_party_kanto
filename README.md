@@ -47,7 +47,7 @@ To run Kanto and Mosquitto services properly in Oniro-OpenHarmony, you need to a
 1. **Apply a SELinux Policy Patch:** This is the recommended method to ensure services run smoothly. Apply the `ohos_policy-add-selinux-policy.patch` to the `base/security/selinux_adapter` directory using the following command:
 
     ```console
-    git apply --directory=base/security/selinux_adapter ohos_policy-add-selinux-policy.patch
+    git apply --directory=<SRC_ROOT_DIR>/base/security/selinux_adapter ohos_policy-add-selinux-policy.patch
     ```
 
 2. **Disable SELinux:** As a quicker, but less secure option, you can disable SELinux. This method is only suggested for testing or development environments. To disable, change the `build_selinux` setting from `true` to `false` in the `//vendor/hihope/rk3568/config.json` file:
@@ -112,6 +112,9 @@ After completing the build, proceed to flash the board as directed in the docume
 - Log files for Kanto and Mosquitto can be found at `/data/log/kanto/suite-connector.log` and `/data/log/mosquitto/mosquitto.log`, respectively. These logs are instrumental for troubleshooting and monitoring service activity.
 - For manual control over the services, employ the `service_control` command, specifying either `kanto` or `mosquitto` to start or stop the services as needed.
 - An active internet connection is necessary for the suite-connector to communicate with the backend. You may need to configure a Wi-Fi connection on your device to ensure uninterrupted data upload capabilities.
+
+## Sample application
+For developers looking to get started with practical examples, a sample application showcasing the use of Kanto on the Oniro-OpenHarmony platform can be found in the [services](services) subdirectory. This application is designed to read real sensor data from a sensor board and send telemetry data to an IoT platform using the MQTT protocol via Eclipse Kanto. It serves as an excellent starting point for understanding how to implement and utilize Kanto in real-world scenarios.
 
 ## Conclusion
 Following these steps will successfully integrate Kanto and Mosquitto into your Oniro-OpenHarmony build system, allowing you to leverage these third-party services within your projects. This integration enhances the system's functionality, offering a more robust and versatile development environment.
