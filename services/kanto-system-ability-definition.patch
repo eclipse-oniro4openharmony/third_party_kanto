@@ -1,0 +1,36 @@
+From 0b2eeffce447e44c463c7e3f3eacb2e5f9fa72db Mon Sep 17 00:00:00 2001
+From: Francesco Pham <francesco.pham@huawei.com>
+Date: Fri, 22 Mar 2024 12:05:16 +0100
+Subject: [PATCH] Add system ability definition for kanto
+
+Add system ability ID definition for Kanto Service
+
+Signed-off-by: Francesco Pham <francesco.pham@huawei.com>
+Change-Id: I480a7c336481e9934ac64a323131edb432cdcba8
+---
+ .../innerkits/samgr_proxy/include/system_ability_definition.h   | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/interfaces/innerkits/samgr_proxy/include/system_ability_definition.h b/interfaces/innerkits/samgr_proxy/include/system_ability_definition.h
+index 2ce7187..3b8fb14 100644
+--- a/interfaces/innerkits/samgr_proxy/include/system_ability_definition.h
++++ b/interfaces/innerkits/samgr_proxy/include/system_ability_definition.h
+@@ -296,6 +296,7 @@ enum {
+     SUBSYS_ACE_SYS_ABILITY_ID_BEGIN                  = 7001,
+     ARKUI_UI_APPEARANCE_SERVICE_ID                   = 7002,
+     CA_DAEMON_ID                                     = 8001,
++    KANTO_SERVICE_SA_ID                              = 8100,
+ 
+     // reserved for vendor
+     VENDOR_SYS_ABILITY_ID_BEGIN                      = 0x00010000,  // 65536
+@@ -472,6 +473,7 @@ inline const std::map<int, std::string> saNameMap_ = {
+     { LOCAL_CODE_SIGN_SERVICE_ID, "LocalCodeSignService" },
+     { INTELL_VOICE_SERVICE_ID, "IntellVoiceService" },
+     { FILE_ACCESS_SERVICE_ID, "FileAccessService" },
++    { KANTO_SERVICE_SA_ID, "KantoService" },
+ };
+ } // namespace OHOS
+ 
+-- 
+2.25.1
+
