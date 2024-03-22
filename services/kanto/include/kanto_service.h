@@ -17,6 +17,8 @@
 
 #include "kanto_service_stub.h"
 #include "system_ability.h"
+#include <cstring>
+#include "mqtt/client.h"
 
 namespace OHOS {
 class KantoService : public SystemAbility, public KantoServiceStub {
@@ -32,6 +34,16 @@ public:
 
 protected:
     DISALLOW_COPY_AND_MOVE(KantoService);
+
+private:
+    int sendTelemetry(double temperature);
+    int openSerialPort(const char* device);
+    bool configureSerialPort(int fd);
+    void readAndSendTelemetryData(int fd);
+
+    std::string deviceIdInNamespaceNotation;
+    std::string telemetryTopic;
+    mqtt::client *client;
 };
 
 }
