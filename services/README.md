@@ -23,6 +23,12 @@ For example, using mosquitto on debian derivative, open the */etc/mosquitto/mosq
 allow_anonymous true
 ```
 
+### Apply patch for System Ability definition
+The Kanto Service requires the Kanto Service System Ability to be defined in the system configuration. Apply the following patch to the system configuration file to include the Kanto Service System Ability:
+```console
+git apply --directory=<SRC_ROOT_DIR>/foundation/systemabilitymgr/samgr kanto-system-ability-definition.patch
+```
+
 ## Installation
 The Kanto Service is designed to be integrated into the Oniro-OpenHarmony system. It should be compiled and deployed as part of the system image. Ensure the application is included in your system build configuration.
 
